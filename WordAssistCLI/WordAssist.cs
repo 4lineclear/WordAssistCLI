@@ -70,7 +70,7 @@ namespace WordAssistCLI
         {
             while (Input != "!quit")
             {
-                this.CurrentProcess.Reponse();
+                this.CurrentProcess.Response();
                 this.Input = Console.ReadLine().Trim().ToLower();
                 this.CurrentProcess = Matcher.GetProcess(Input);
             }
@@ -78,7 +78,7 @@ namespace WordAssistCLI
         }
         public void StartingMessage()
         {
-            Console.WriteLine(  "Welcome To Word Assist! The very best word game too around\n" +
+            Console.WriteLine(  "Welcome To Word Assist! The very best word game tool around\n" +
                                 "===========================\n" +
                                 "   Press Enter to Start    \n" +
                                 "===========================");
