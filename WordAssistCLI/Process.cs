@@ -7,46 +7,48 @@ using System.Threading.Tasks;
 namespace WordAssistCLI
 {
     /// <summary>
-    /// Used to process a user's input and respond meaningfully 
+    ///     Used to process a user's input and respond meaningfully 
     /// </summary>
     public class Process
     {
         /// <summary>
-        /// Refers to an accpeted string input used when validating user input
+        ///     Refers to an accpeted string input used when validating user input
         /// </summary>
         /// <remarks>
-        /// Is private because any validation should be through <see cref="Validate"/>
+        ///     Is private because any validation should be through <see cref="Validate"/>
         /// </remarks>
         private string Input { get; }
         /// <summary>
-        /// Contains a description of what  <see cref="Response"/> to achieve
+        ///     Contains a description of what  <see cref="Response"/> to achieve
         /// </summary>
         /// <remarks>
-        /// Contains <see cref="Input"/> as part of the description
-        /// <para>
-        /// Is (intended) to be used to list to the user a list of Processes
-        /// </para>
+        ///     <para> 
+        ///         Contains <see cref="Input"/> as part of the description 
+        ///     </para>
+        ///     <para> 
+        ///         Is (intended) to be used to list to the user a list of Processes
+        ///     </para>
         /// </remarks>
         public string Description { get; }
         /// <summary>
-        /// A response to a user's action
+        ///     A response to a user's action
         /// </summary>
         /// <remarks>
-        /// Is only meant to be called when <see cref="Validate"/> returns true
+        ///     Is only meant to be called when <see cref="Validate"/> returns true
         /// </remarks>
         public Action Response { get; }
         /// <summary>
-        /// The method in which a user's validation is handled
+        ///     The method in which a user's validation is handled
         /// </summary>
         /// <remarks>
-        /// Validation can be handled either by an equality operator, or <see cref="String.StartsWith(string)"/>
+        ///     Validation can be handled either by an equality operator, or <see cref="String.StartsWith(string)"/>
         /// </remarks>
         /// <returns>
-        /// True if the inputted <c>string</c> matches to <see cref="Input"/> according to the specified method
+        ///     True if the inputted <c>string</c> matches to <see cref="Input"/> according to the specified method
         /// </returns>
         public Predicate<string> Validate { get; }
         /// <summary>
-        /// Creates an empty object with non null values
+        ///     Creates an empty object with non null values
         /// </summary>
         public Process()
         {
@@ -97,5 +99,55 @@ namespace WordAssistCLI
                 (string userInput) => userInput.StartsWith(this.Input);
         }
 
+    }
+    /// <summary>
+    ///     A Template for the creation of a <see cref="Process"/> object
+    /// </summary>
+    public class TemplateProcess
+    {
+        /// <summary>
+        ///     Refers to an accpeted string input used when validating user input
+        /// </summary>
+        public string Input { get; }
+
+        /// <summary>
+        ///     Contains a description of what  <see cref="Response"/> to achieve
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         Unlike <see cref="Process.Description"/> it does not contain <c>Input</c>
+        ///     </para>
+        ///     <para>
+        ///         Is (intended) to be used to list to the user a list of Processes
+        ///     </para>
+        /// </remarks>
+        public string Description { get; }
+
+        /// <summary>
+        /// A response to a user's action
+        /// </summary>
+        public Action Response { get; }
+
+        /// <summary>
+        ///     The method in which a user's validation is handled
+        /// </summary>
+        /// <remarks>
+        ///     Validation can be handled either by an equality operator, or <see cref="String.StartsWith(string)"/>
+        /// </remarks>
+        /// <returns>
+        ///     True if the inputted <c>string</c> matches to <see cref="Input"/> according to the specified method
+        /// </returns>
+        public bool Validate { get; }
+
+        /// <summary>
+        ///     Creates a Template to make a <see cref="Process"/> object
+        /// </summary> 
+        public TemplateProcess(string input, string description, Action reponse, bool validation)
+        {
+            this.Input = input;
+            this.Description = description;
+            this.Response = reponse;
+            this.Validate = validation;
+        }
     }
 }

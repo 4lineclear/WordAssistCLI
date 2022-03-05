@@ -8,7 +8,7 @@ namespace WordAssistCLI
 {
     public class WordAssist
     {
-        string Input { get; set; }
+        public string Input { get; private set; }
         private Process CurrentProcess { get; set; }
         private KeyMatcher Matcher { get; }
         private HangmanAssist Hangman { get; }
@@ -17,38 +17,41 @@ namespace WordAssistCLI
             this.Input = "";
             this.Matcher = new KeyMatcher("Input Unrecognized");
             this.CurrentProcess = new Process("", "", StartingMessage);
-
-            Hangman = new HangmanAssist();
+            Hangman = new HangmanAssist(this);
 
             ProcessMatcher actionMatcher = new ProcessMatcher("/", "Action Unrecognized");
             ProcessMatcher hangmanMatcher = new ProcessMatcher("/", "Hangman Action Unrecognized");
             ProcessMatcher commandMatcher = new ProcessMatcher("!", "Command Unrecognized");
 
-            hangmanMatcher.AddProcess("back","returns to main menu", () =>
+            TemplateProcess[] hangmanActions =
             {
-                Matcher.SetNewProcessMatcher("/", actionMatcher);
-                Console.Clear();
-                Console.WriteLine("Returned to main menu");
-            });
-            hangmanMatcher.AddProcess("startfind","starts the finding of a word", () =>
+                new TemplateProcess("back","returns to main menu", () =>
+                {
+                    Matcher.SetNewProcessMatcher("/", actionMatcher);
+                    Console.Clear();
+                    Console.WriteLine("Returned to main menu");
+                }, true),
+                new TemplateProcess("setlen","sets the length of the word",Hangman.SetLen, false),
+                new TemplateProcess("setcl","sets a correct letter, or sets all correct letters to a new value",Hangman.SetCL, false),
+                new TemplateProcess("setil","sets a incorrect letter, or sets all incorrect letters to a new value",Hangman.SetIL, false),
+                new TemplateProcess("addcl","adds a correct letter",Hangman.AddCL, false),
+                new TemplateProcess("addil","adds a incorrect letter",Hangman.AddIL, false),
+                new TemplateProcess("rmcl","removes a correct letter",Hangman.RMCL, false),
+                new TemplateProcess("rmil","removes a incorrect letter",Hangman.RMIL, false),
+                new TemplateProcess("listcl","lists correct letters",Hangman.ListCL, true),
+                new TemplateProcess("listil","lists incorrect letters",Hangman.ListIL, true),
+                new TemplateProcess("listag","lists all guesses",Hangman.ListAG, true),
+                new TemplateProcess("listbg","lists best guesses, optianally all of them or a cetain number of them",Hangman.ListBG, false),
+                new TemplateProcess("numg","outputs number of guesses",Hangman.NumG, false),
+                new TemplateProcess("clearcl","clears correct letters",Hangman.ClearCl, true),
+                new TemplateProcess("clearil","clears incorrect letters",Hangman.ClearIL, true),
+                new TemplateProcess("clearall","clears all values",Hangman.ClearAll, true),
+                new TemplateProcess("listall","lists set values",Hangman.ListAll, true)
+            };
+            foreach(TemplateProcess process in hangmanActions)
             {
-                Console.Write("Word Length: ");
-                int output = 0;
-                while(!Int32.TryParse(Console.ReadLine(), out output) || !Hangman.TrySetLength(output))
-                {
-                    Console.WriteLine("Invalid input! Please enter a integer within 2 and 31");
-                }
-                Console.WriteLine(Hangman.Find.Length);
-                hangmanMatcher.RemoveProcess("startfind");
-                hangmanMatcher.AddProcess("find", "prints list of possible results", () =>
-                {
-                    IEnumerable<string> guesses = Hangman.find();
-                    foreach(string word in guesses)
-                    {
-                        Console.WriteLine(word);
-                    }
-                });
-            });
+                hangmanMatcher.AddProcess(process);
+            }
 
             actionMatcher.AddProcess("hangman", "starts hangman", () => 
             {

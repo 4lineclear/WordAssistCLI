@@ -18,11 +18,7 @@ namespace WordAssistCLI
         public KeyMatcher(string unrecognizedResponse)
         {
             this.Matchers = new List<ProcessMatcher>();
-            this.Unrecognized = new Process("","", () =>
-            { 
-                Console.WriteLine(unrecognizedResponse);
-                Console.Beep();
-            });
+            this.Unrecognized = new Process("","", () => Console.WriteLine(unrecognizedResponse));
         }
         public Process GetProcess(string input)
         { 

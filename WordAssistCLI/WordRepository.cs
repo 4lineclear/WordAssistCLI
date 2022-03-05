@@ -28,14 +28,12 @@ namespace WordAssistCLI
                 }\WordFiles";
             this.LetterCount = new int[26];
         }
-        public char FindQualifyingWords(out IEnumerable<string> guesses, IEnumerable<string> find, IEnumerable<string> exclude)
+        public char FindQualifyingWords(out string[] guesses, string[] find, string[] exclude)
         {
             LetterCount = new int[26];
-            guesses = FindQualifyingWords(find, exclude);
-            return GetMostCommonLetter(guesses, find, exclude);
+            guesses = FindQualifyingWords(ArrayToString(find), ArrayToString(exclude)).ToArray();
+            return GetMostCommonLetter(guesses, ArrayToString(find), ArrayToString(exclude));
         }
-        public IEnumerable<string> FindQualifyingWords(IEnumerable<string> find, IEnumerable<string> exclude)
-            => this.FindQualifyingWords(IEnumberableToString(find), IEnumberableToString(exclude));
 
         public IEnumerable<string> FindQualifyingWords(string find, string exclude)
         {
@@ -117,18 +115,6 @@ namespace WordAssistCLI
             }
             return false;
         }
-        private string IEnumberableToString(IEnumerable<string> iEnumberable)
-        {
-            string temp = "";
-            foreach (string letter in iEnumberable)
-            {
-                temp += letter;
-            }
-            return temp;
-        }
-
-        char GetMostCommonLetter(IEnumerable<string> wordList, IEnumerable<string> find, IEnumerable<string> exclude)
-            => GetMostCommonLetter(wordList, IEnumberableToString(find), IEnumberableToString(exclude));
         char GetMostCommonLetter(IEnumerable<string> wordList, string find, string exclude)
         {
             foreach (string word in wordList)
@@ -147,12 +133,21 @@ namespace WordAssistCLI
             }
             return (char)(index + 65);
         }
-        void TallyWord(string word)
+        private void TallyWord(string word)
         {
             foreach (char letter in word)
             {
                 LetterCount[char.ToUpper(letter) - 65]++;
             }
+        }
+        private string ArrayToString(string[] array)
+        {
+            string word = "";
+            foreach(string str in array)
+            {
+                word += str;
+            }
+            return word;
         }
     }
 }

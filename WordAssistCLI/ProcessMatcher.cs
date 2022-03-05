@@ -20,11 +20,7 @@ namespace WordAssistCLI
         public ProcessMatcher(string keyWord, string unrecognizedResponse)
         {
             this.KeyWord = keyWord;
-            this.Unrecognized = new Process("", "", () => 
-            { 
-                Console.WriteLine(unrecognizedResponse);
-                Console.Beep();
-            });
+            this.Unrecognized = new Process("", "", () => Console.WriteLine(unrecognizedResponse));
             this.Processes = new List<Process>();
         }
         public Process GetProcess(string input)
@@ -58,6 +54,10 @@ namespace WordAssistCLI
         {
             this.Processes.Add( new Process(KeyWord + input, description, response, validation) );
         }
+        public void AddProcess(TemplateProcess process)
+        {
+            this.Processes.Add( new Process(KeyWord + process.Input, process.Description, process.Response, process.Validate));
+        }
         public void SetNewProcesses(List<Process> newProcesses)
         {
             this.Processes = newProcesses;
@@ -73,7 +73,5 @@ namespace WordAssistCLI
                 }
             }
         }
-
-
     }
 }
